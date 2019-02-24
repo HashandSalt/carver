@@ -1,24 +1,24 @@
 <?php
 
-    /**
-     * @author Oliver Lillie (aka buggedcom) <publicmail@buggedcom.co.uk>
-     *
-     * @license BSD
-     * @copyright Copyright (c) 2008 Oliver Lillie <http://www.buggedcom.co.uk>
-     * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
-     * files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
-     * modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
-     * is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be
-     * included in all copies or substantial portions of the Software.
-     *
-     * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
-     * WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
-     * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-     * ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-     *
-     * @package CustomTags
-     * @version 1.0.0
-     */
+/**
+* @author Oliver Lillie (aka buggedcom) <publicmail@buggedcom.co.uk>
+*
+* @license BSD
+* @copyright Copyright (c) 2008 Oliver Lillie <http://www.buggedcom.co.uk>
+* Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation
+* files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy,
+* modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software
+* is furnished to do so, subject to the following conditions:  The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE
+* WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+* COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+* ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*
+* @package CustomTags
+* @version 1.0.0
+*/
 
 
 
@@ -50,8 +50,6 @@
             'tag_global_callback'       => false,
 //          tag_directory; The directory of the custom tags.
             'tag_directory'             => false,
-//          template_directory; The directory of the custom tags.
-            'template_directory'        => false,
 //          missing_tags_error_mode; The error mode for outputting errors.
 //              CustomTags::ERROR_EXCEPTION throws and exception for catching.
 //              CustomTags::ERROR_SILENT returns empty data if a tag or error occurs.
@@ -89,7 +87,6 @@
         private static $_tag_order      = array();
 
         public static $tag_directory_base = false;
-        public static $template_directory_base = false;
         public static $error_mode       = false;
 
 //      The custom tag open string
@@ -107,9 +104,7 @@
                 ));
             }
 
-            if ($this->_options['template_directory'] === false) {
-                $this->setOption('template_directory', isset($this->_options['tag_directory']) === false ? dirname(__FILE__).DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR : $this->_options['tag_directory']);
-            }
+
 
             if ($this->_options['tag_directory'] === false) {
                 $this->setOption('tag_directory', dirname(__FILE__).DIRECTORY_SEPARATOR.'tags'.DIRECTORY_SEPARATOR);
@@ -162,9 +157,6 @@
                     $this->_options[$varname] = $varvalue;
                 }
                 switch ($varname) {
-                    case 'template_directory':
-                        self::$template_directory_base = $varvalue;
-                        break;
                     case 'tag_directory':
                         self::$tag_directory_base = $varvalue;
                         break;
@@ -648,15 +640,6 @@
                         foreach ($attributes[0] as $key=>$row) {
                             $tag['attributes'][$attributes[1][$key]] = $attributes[3][$key];
                         }
-                        if (isset($tag['attributes']['template']) === true) {
-                            $template = $this->_options['template_directory'].$tag['name'].DIRECTORY_SEPARATOR.$tag['attributes']['template'].'.html';
-                            if (is_file($template) === false) {
-//                                $tag['attributes']['template'] = false;
-                                $tag['attributes']['_template'] = $template;
-                            } else {
-                                $tag['attributes']['template'] = $template;
-                            }
-                        }
                     }
                 }
                 $tag['attributes'] = (object) $tag['attributes'];
@@ -670,56 +653,4 @@
      */
     class CustomTagsException extends \Exception
     {
-    }
-
-    /**
-     * The Custom Tags Helper class, It can help in making small custom tags,
-     * however it is best to use your own template system or way of doing things.
-     */
-    class CustomTagsHelper
-    {
-        /**
-         * Returns the content of a template.
-         * @access public
-         * @param array $tag The tag array.
-         * @param boolean $produce_error If there is an error with the template and this is set to true then an error is produced.
-         */
-        public static function getTemplate($tag, $produce_error=true)
-        {
-//          get the template
-            $template_name = isset($tag['attributes']['template']) === true ? $tag['attributes']['template'] : 'default';
-            if (is_array(CustomTags::$tag_directory_base) === false) {
-                CustomTags::$tag_directory_base = array(CustomTags::$tag_directory_base);
-            }
-            foreach (CustomTags::$tag_directory_base as $directory) {
-                $template = rtrim($directory, DIRECTORY_SEPARATOR).$tag['name'].DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR.$template_name.'.html';
-                if (is_file($template) === true) {
-                    return file_get_contents($template);
-                }
-            }
-//          template doesn't exist so produce error if required
-            if ($produce_error === true) {
-                CustomTags::throwError($tag['name'], 'tag template resource not found.');
-            }
-            return false;
-        }
-
-        /**
-         * A simple templater, replaces %VARNAME% with the value.
-         * @access public
-         * @param array $tag The tag array.
-         * @param array $replacements The array of search and replace values.
-         */
-        public static function parseTemplate($tag, $replacements)
-        {
-//          get template
-            $template = self::getTemplate($tag);
-            $search = $replace = array();
-//          compile search and replace values for replacement
-            foreach ($replacements as $varname => $varvalue) {
-                array_push($search, '%'.strtolower($varname).'%');
-                array_push($replace, $varvalue);
-            }
-            return str_replace($search, $replace, $template);
-        }
     }
