@@ -27,7 +27,7 @@ What if you could do this instead?
 
 **I would love it if this became a community plugin. If you feel you can help out, please do :)**
 
-You can find some example tags here - https://github.com/HashandSalt/Kirby-Carver-Tags
+You can find some example tags in `/library`
 
 ## Installation
 
