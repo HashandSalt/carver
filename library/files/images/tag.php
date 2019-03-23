@@ -5,20 +5,21 @@
         $att = json_decode(json_encode($tag['attributes']), true);
 
         $class = isset($att['class']) ? $att['class'] : '';
-        $wraptag = isset($att['wraptag']) ? $att['wraptag'] : 'div';
-        $exclude = isset($att['exclude']) ? $att['exclude'] : '';
+        $wraptag = isset($att['wraptag']) ? $att['wraptag'] : 'ul';
+        $breaktag = isset($att['breaktag']) ? $att['breaktag'] : 'li';
+        $field = isset($att['field']) ? $att['field'] : '';
 
-        $images = page()->images();
+        // Get images from a field or from the page if no field
+        $images = isset($att['field']) ? page()->{$att['field']}()->toFiles() : page()->images();
 
-        if ($exclude) {
-            $images = $images->filterBy('filename', '!*=', $att['exclude']);
-        }
-
+        // Build up the list
         $html = '';
         foreach ($images as $image) {
          $img = '<img src="' . $image->url().'"'. 'alt="'. $image->alt().'">';
-
-         $html .= Html::tag($wraptag, [$img], ["class" => $class]). PHP_EOL;
+         $html .= Html::tag($breaktag, [$img]). PHP_EOL;
         }
-        return  $html ;
+
+        $imageset = Html::tag($wraptag, [$html], ["class" => $class]). PHP_EOL;
+
+        return $imageset;
     }
