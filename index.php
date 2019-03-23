@@ -16,7 +16,7 @@ $ct = new CustomTags(array(
     'tag_name'              => 'kb',
     'tag_callback_prefix'   => 'kb_',
     'parse_on_shutdown'     => true,
-    'tag_directory'         => [$kirby->root('site').'/carver/', $kirby->root('plugins').'/carver/library/'],
+    'tag_directory'         => [$kirby->root('site').'/carver/', $kirby->root('plugins').'/carver/library/fields/', $kirby->root('plugins').'/carver/library/files/', $kirby->root('plugins').'/carver/library/html/'],
     'sniff_for_buried_tags' => true,
     'hash_tags'             => false,
 ));
