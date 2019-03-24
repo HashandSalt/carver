@@ -23,11 +23,8 @@ What if you could do this instead?
 <kb:date format="d/m/Y" field="date" wraptag="time" class="mytime" />
 ```
 
-**This is not yet ready for prime time at this stage, this is a proof of concept. It works, but it is built around a old library (the only one i could find) for doing this kind of thing and the age of that library bothers me. I intend to refactor or re-write into something more modern.**
 
-**I would love it if this became a community plugin. If you feel you can help out, please do :)**
-
-You can find some example tags in `/library`
+You can find some example tags in `site/plugins/carver/library`
 
 ## Installation
 
@@ -90,33 +87,49 @@ Will result in this:
 <p>02/02/2019</p>
 ```
 
-## Advanced Use
-
-Tags can be nested!....
+## More tag examples
 
 ```
-<kb:upper type="ucwords">
-  <p>This text is transformed by the custom tag.</p>
-  <p><kb:lower>THIS IS LOWERCASE TEXT</kb:lower></p>
-  <kb:date field="date" />
-</kb:upper>
-```
+<!-- Render a gist -->
+<kb:gist url="https://gist.github.com/bastianallgeier/b79615a9f7ca76c810b7" />
 
-Renders this:
+<!-- Render a youtube video -->
+<kb:youtube url="https://www.youtube.com/watch?v=VcjzHMhBtf0" width="100%" height="450px" autoplay="1" loop="1" />
 
-```
-<p>This Text Is Transformed By The Custom Tag.</p>
-<p>this is lowercase text</p>
-<p>02/02/2019</p>
-```
+<!-- Render a vimeo video -->
+<kb:vimeo url="https://vimeo.com/324963776" width="100%" height="450px" autoplay="1" loop="1" autopause="0" />
 
+<!-- Render an iframe -->
+<kb:iframe url="https://getkirby.com" width="100%" height="400px" wraptag="div" class="iframecontent" wrapclass="iframecontainer" />
+
+<!-- Render a link -->
+<kb:a href="https://hashandsalt.com" class="mylink" rel="nofollow" />
+
+<!-- Title -->
+<kb:title field="title" wraptag="h1" />
+
+<!-- Kirbytext from a field -->
+<kb:kt field="text" />
+
+<!-- Obfusifcated Email Link -->
+<kb:email field="email" text="Email us today" class="mail" />
+
+<!-- Images from a field, wrapped in a container tag and items wrapped in a tag each -->
+<kb:images class="images" file="gallery" wraptag="ul" breaktag="li" />
+
+<!-- Single image by name -->
+<kb:image class="myimage" file="lw31n7hd1i.jpg" />
+
+<!-- Handle a missing image gracefully -->
+<kb:image class="myimage" file="lw31n7hsdfsdfd1i.jpg" />
+```
 
 ## Road Map
 
 * Bring tag parser up to date
 * Refactor tag parser to allow for options to be set via config
 * Create a big library of built in tags that work with Kirby's built in functions.
-* Composer support
+* ~Composer support~
 
 ## Dedication
 
