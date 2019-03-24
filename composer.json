@@ -1,6 +1,6 @@
 {
     "name": "hashandsalt/kirby-carver",
-    "description": "Kirby 3 Chopper plugin for using PHP and the power of Kirby to create custom html tags.",
+    "description": "Kirby 3 Carver plugin for using PHP and the power of Kirby to create custom html tags.",
     "type": "kirby-plugin",
     "license": "MIT",
     "authors": [
